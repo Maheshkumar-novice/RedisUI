@@ -1,6 +1,6 @@
 import redis
 from textual.app import App, ComposeResult
-from textual.widgets import DataTable, Footer, Header, Input
+from textual.widgets import Footer, Header, Input, OptionList
 
 redis = redis.Redis()
 
@@ -15,27 +15,23 @@ class RedisUI(App):
 
         yield Input()
 
-        for id, key in enumerate(redis.keys('*'), 1):
-            self.KEYS.append((id, key.decode('utf-8'), redis.type(key).decode('utf-8')))
+        for key in redis.keys('*'):
+            self.KEYS.append(f"{key.decode('utf-8')} ({redis.type(key).decode('utf-8').upper()})")
 
-        yield DataTable()
+        yield OptionList(*self.KEYS)
+
         yield Footer()
 
-    def on_mount(self) -> None:
-        table = self.query_one(DataTable)
-        table.add_columns(*self.KEY_HEADERS)
-
-        table.add_rows(self.KEYS)
-
     def on_input_submitted(self, event: Input.Submitted) -> None:
-        table = self.query_one(DataTable)
-        table.clear()
+        option_list = self.query_one(OptionList)
+        option_list.clear_options()
 
         self.KEYS = []
-        for id, key in enumerate(redis.keys(event.input.value), 1):
-            self.KEYS.append((id, key.decode('utf-8'), redis.type(key).decode('utf-8')))
+        for key in redis.keys(event.input.value):
+            self.KEYS.append(f"{key.decode('utf-8')} ({redis.type(key).decode('utf-8').upper()})")
 
-        table.add_rows(self.KEYS)
+        option_list.add_options(self.KEYS)
+
 
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark
