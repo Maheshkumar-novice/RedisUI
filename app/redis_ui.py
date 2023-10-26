@@ -7,7 +7,7 @@ redis = redis.Redis()
 
 class RedisUI(App):
     BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
-    KEY_HEADERS = ['No', 'Key', 'Type']
+    KEY_HEADERS = ["No", "Key", "Type"]
     KEYS = []
 
     def compose(self) -> ComposeResult:
@@ -15,8 +15,10 @@ class RedisUI(App):
 
         yield Input()
 
-        for key in redis.keys('*'):
-            self.KEYS.append(f"{key.decode('utf-8')} ({redis.type(key).decode('utf-8').upper()})")
+        for key in redis.keys("*"):
+            self.KEYS.append(
+                f"{key.decode('utf-8')} ({redis.type(key).decode('utf-8').upper()})"
+            )
 
         yield OptionList(*self.KEYS)
 
@@ -28,10 +30,11 @@ class RedisUI(App):
 
         self.KEYS = []
         for key in redis.keys(event.input.value):
-            self.KEYS.append(f"{key.decode('utf-8')} ({redis.type(key).decode('utf-8').upper()})")
+            self.KEYS.append(
+                f"{key.decode('utf-8')} ({redis.type(key).decode('utf-8').upper()})"
+            )
 
         option_list.add_options(self.KEYS)
-
 
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark

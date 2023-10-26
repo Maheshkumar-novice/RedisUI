@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := req
-sources = app/*
+
 
 .PHONY: install
 install:
@@ -8,13 +8,12 @@ install:
 
 .PHONY: format
 format:
-	ruff --fix --exit-non-zero-on-fix $(sources)
-	ruff $(sources) -n --select I --fix --exit-non-zero-on-fix
+	ruff format . --target-version py311
 
 .PHONY: lint
 lint:
-	ruff $(sources)
-	ruff $(sources) -n --select I
+	ruff check --fix --exit-non-zero-on-fix .
+
 .PHONY: req
 req:
 	pip freeze > requirements.txt
