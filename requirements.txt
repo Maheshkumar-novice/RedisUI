@@ -28,6 +28,6 @@ textual==0.40.0
 textual-dev==1.2.1
 typing_extensions==4.8.0
 uc-micro-py==1.0.2
-virtualenv==20.24.6
+virtualenv==20.26.6
 yarl==1.9.2
 zipp==3.17.0
